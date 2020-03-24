@@ -6,11 +6,8 @@
   "scripts": {
     "install": "npm run install:server",
     "install:server": "(cd ./server && npm install)",
-    "postinstall":"npm run build",
     "start": "npm run start:prod",
-    "start:prod": "(cd ./server && ./node_modules/.bin/ts-node ./src/main.ts)",
-    "start:dev": "npm run start:server",
-    "start:server": "(cd ./server && npm run start:watch)"
+    "start:prod": "(cd ./server && ./node_modules/.bin/ts-node ./src/main.ts)"
   },
   "author": "Oleg Ivinskiy <skitlz637@mail.ru>",
   "license": "ISC"
