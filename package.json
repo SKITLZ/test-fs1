@@ -7,9 +7,9 @@
     "install": "npm run install:server",
     "install:server": "(cd ./server && npm install)",
     "start": "npm run start:prod",
-    "start:prod": "(cd ./server && ./node_modules/.bin/ts-node ./src/main.ts)",
+    "start:prod": "(cd ./server && npm run start)",
     "start:dev": "npm run start:server",
-    "start:server": "(cd ./server && npm run start)"
+    "start:server": "(cd ./server && npm run start:dev)"
   },
   "author": "Oleg Ivinskiy <skitlz637@mail.ru>",
   "license": "ISC"
