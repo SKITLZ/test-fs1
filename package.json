@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install": "npm run install:server",
+    "install": "npm run install:client && npm run install:server",
+    "install:client": "(cd ./client && npm install)",
     "install:server": "(cd ./server && npm install)",
+    "postinstall":"npm run build",
+    "build": "npm run build:client",
+    "build:client": "(cd ./client && npm run build)",
     "start": "npm run start:prod",
     "start:prod": "(cd ./server && npm run start)",
     "start:dev": "npm run start:server",

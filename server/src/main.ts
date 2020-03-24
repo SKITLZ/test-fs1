@@ -3,7 +3,7 @@ import { join }  from 'path';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-const CLIENT_FILES = join(__dirname, '..', '..', 'client', 'dist');
+const CLIENT_FILES = join(__dirname, '..', '..', 'client', 'build');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
