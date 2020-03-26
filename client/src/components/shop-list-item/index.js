@@ -1,0 +1,196 @@
+import React, { Component } from 'react';
+
+import './shop-list-item.css';
+
+// Для детальной страницы
+// import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
+import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
+
+export default class App extends Component {
+  state = {
+    schedule: [
+      {
+        day: 'Monday',
+        workTime: ['09:00', '17:00'],
+      },
+      {
+        day: 'Tuesday',
+        workTime: ['09:00', '17:00'],
+      },
+      {
+        day: 'Wednesday',
+        workTime: ['09:00', '17:00'],
+      },
+      {
+        day: 'Thursday',
+        workTime: ['09:00', '17:00'],
+        timeOffs: [
+          {
+            label: 'Lunch break',
+            time: ['12:10', '12:20'],
+          },
+          {
+            label: 'Afterparty',
+            time: ['12:30', '12:40'],
+          },
+        ],
+      },
+      {
+        day: 'Friday',
+        workTime: ['09:00', '16:00'],
+      },
+      {
+        day: 'Saturday',
+        workTime: ['09:00', '17:00'],
+        closed: true,
+      },
+      {
+        day: 'Sunday',
+        workTime: ['09:00', '17:00'],
+        closed: true,
+      },
+    ],
+    // times: [
+    //   {
+    //     label: 'Lunch break',
+    //     time: ['00:10', '00:20'],
+    //   },
+    //   {
+    //     label: 'Afterparty',
+    //     time: ['00:30', '00:40'],
+    //   },
+    // ],
+    curDay: fullWeekDay, // date-helpers
+    curDayIndex: weekDayMap[fullWeekDay], // date-helpers
+    curTime: this.getCurTime(),
+    updateSetInterval: null,
+    shopIsWorking: false,
+  };
+
+  // Для детальной страницы
+  // onTimeRangeChange = (time, index) => {
+  //   const times = [...this.state.times]; // Shallow копия
+  //   times[index].time = time; // Обновление единственного времени
+  //   return this.setState({ times });
+  // };
+
+  componentDidMount = () => {
+    this.updateShop();
+    
+    this.state.updateSetInterval = setInterval(() => {
+      this.updateShop();
+    }, 1000 * 1);
+  };
+
+  updateShop = () => {
+    this.setState({ curTime: this.getCurTime() });
+    this.checkIsWorking();
+  };
+
+  getCurTime() {
+    // Собирает строку вида HHmm
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getSeconds();
+    let time = '';
+    [hours, minutes].forEach((el) => {
+      if (el < 10) time += '0'
+      if (el === null) time += '00'
+      time += el
+    });
+    return time;
+  };
+
+  checkIsWorking = () => {
+    const { schedule } = this.state;
+    const todaySchedule = schedule[this.state.curDayIndex];
+
+    if (todaySchedule.closed) {
+      this.setState({ shopIsWorking: false });
+      return;
+    }
+
+    for (let i = 0; i < todaySchedule.timeOffs.length; i++) {
+      // Если время == null, то заменяет на строку '00:00'
+      const time = todaySchedule.timeOffs[i].time.map(el => el || '00:00');
+      const from = time[0].replace(':', '');
+      const to = time[1].replace(':', '');
+      
+      if ((from <= this.state.curTime) && (to >= this.state.curTime)) {
+        this.setState({ shopIsWorking: false });
+        return;
+      }
+    }
+
+    this.setState({ shopIsWorking: true });
+  };
+
+  // Для детальной страницы
+  // При сохранении, если from > to (то поменять их местами)
+  // saveShop = () => {};
+
+  render() {
+    const description = this.props.description ? <p>{ this.props.description }</p> : null;
+    const days = this.state.schedule.map((day, dayIndex) => {
+      const workTime = day.workTime;
+      let timeElem = ''
+      if (day.closed) {
+        timeElem = <span className="text-danger pr-3">Closed</span>
+      } else {
+        timeElem = <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
+      }
+
+      let timeOffsElems = null;
+      if (day.timeOffs) {
+        timeOffsElems = day.timeOffs.map((time, timeIndex) => {
+          return (
+            <span
+              className="text-danger pr-3"
+              key={timeIndex}
+            >{time.time[0]}-{time.time[1]} {time.label};</span>
+          )
+        })
+      }
+
+      return (
+        <li className="day-list__item mb-3" key={day.day}>
+          <div>
+            <span className="pr-2">{day.day}:</span>
+            { timeElem }
+            { timeOffsElems }
+          </div>
+        </li>
+      )
+    })
+
+    // Для детальной страницы
+    // const timers = this.state.times.map((el, index) => {
+    //   const { label, time } = el;
+    //   return (
+    //     <div key={index}>
+    //       <p>{time[0]} - {time[1]} {label}</p>
+    //       {/* <TimeRangePicker
+    //         onChange={(time) => this.onTimeRangeChange(time, index)}
+    //         value={time}
+    //         format={"HH:mm"}
+    //         clearIcon={null}
+    //         disableClock
+    //         required
+    //       /> */}
+    //   </div>
+    //   )
+    // });
+
+    return (
+      <div>
+        <p><b className="h4">{ this.props.name }</b></p>
+        { description }
+        <p>{ this.state.shopIsWorking ? 'Shop is working' : 'Closed' }</p>
+        <p>Current time: { this.state.curTime }</p> {/* Для дебага */}
+        <ul className="day-list">
+          { days }
+        </ul>
+      </div>
+    );
+  };
+}

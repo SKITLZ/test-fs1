@@ -2,10 +2,15 @@ import React from 'react';
 
 import './shop-list.css';
 
+import ShopListItem from '../shop-list-item'
+
 const ShopList = ({ shops }) => {
   const elements = shops.map((shop) => {
-    const { id, name } = shop;
-    return <li className="list-group-item" key={ id }>{ name }</li>;
+    return (
+      <li className="shop-list__item list-group-item" key={shop.id}>
+        <ShopListItem { ...shop } />
+      </li>
+    );
   });
 
   return <ul className="shop-list list-group">{ elements }</ul>;

@@ -17,8 +17,8 @@ axios.get('/api/products/')
 export default class App extends Component {
   state = {
     shops: [
-      { id: 1, name: 'Where' },
-      { id: 2, name: 'is' },
+      { id: 1, name: 'Where', description: 'Where is the money, Lebowski', address: 'Liverpool, Penny Lane 32a' },
+      { id: 2, name: 'is', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium temporibus possimus optio quaerat dignissimos molestiae ullam modi quos id officiis repellendus, vel ducimus sint minima cupiditate eaque? Corrupti, mollitia exercitationem!', address: 'Liverpool, Penny Lane 32a', isClosed: true },
       { id: 3, name: 'the' },
       { id: 4, name: 'money' },
       { id: 5, name: 'Lebowski' },
@@ -35,5 +35,4 @@ export default class App extends Component {
       </div>
     );
   };
-
 }
