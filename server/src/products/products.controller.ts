@@ -1,22 +1,26 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards, Req } from '@nestjs/common';
 
 import { ProductsService } from './products.service';
 import { Product } from './product.model'
+import { AuthGuard } from 'src/shared/auth.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @UseGuards(new AuthGuard())
   addProduct(
+    @Req() req: { user: { userId: string } },
     @Body('title') prodTitle: string,
     @Body('description') prodDesc: string,
     @Body('price') prodPrice: number,
   ): Promise<Product> {
-    return this.productsService.insertProduct(prodTitle, prodDesc, prodPrice);
+    return this.productsService.insertProduct(req.user.userId, prodTitle, prodDesc, prodPrice);
   }
 
   @Get()
+  @UseGuards(new AuthGuard())
   getAllProducts(): Promise<Product[]> {
     return this.productsService.getProducts();
   }

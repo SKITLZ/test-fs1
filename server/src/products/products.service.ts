@@ -8,11 +8,12 @@ import { Product } from './product.model'
 export class ProductsService {
   constructor(@InjectModel('Product') private readonly productModel: Model<Product>) {}
 
-  async insertProduct(title: string, desc: string, price: number) {
+  async insertProduct(user: string, title: string, desc: string, price: number) {
     const newProduct = new this.productModel({
       title,
       description: desc,
       price,
+      user,
     });
     return await newProduct.save(); // because mongoose created model :11 new this.productModel, it also has 'magic' methods like .save();
   }
