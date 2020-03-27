@@ -5,6 +5,7 @@ import './shop-list-item.css';
 // For detailed page
 // import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
+import { Link } from 'react-router-dom';
 
 export default class App extends Component {
   state = {
@@ -54,6 +55,7 @@ export default class App extends Component {
 
   checkIsWorking = () => {
     const { schedule } = this.props;
+    if (!schedule) return null; // state isn't ready
     const todaySchedule = schedule[this.state.curDayIndex];
 
     // Is today closed
@@ -104,6 +106,7 @@ export default class App extends Component {
 
   render() {
     const description = this.props.description ? <p>{ this.props.description }</p> : null;
+    if (!this.props.schedule) return null; // state isn't ready
     const days = this.props.schedule.map((day, dayIndex) => {
       const workTime = day.workTime;
       let timeElem = ''
@@ -159,13 +162,14 @@ export default class App extends Component {
         <p className="shop-list-item__name">
           <b>{ this.props.name }</b>
           <span className="float-right">
-            <button
+            <Link
               type="button"
               className="shop-list-item__btn btn btn-outline-warning btn-sm"
               aria-label="Edit shop"
+              to={`/shop/${this.props._id}`}
             >
               <i className="fa fa-edit"></i>
-            </button>
+            </Link>
             <button
               type="button"
               className="shop-list-item__btn btn btn-outline-danger btn-sm"

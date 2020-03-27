@@ -7,6 +7,7 @@ import './app.css';
 import ShopList from '../shop-list';
 import AppHeader from '../app-header';
 import Login from '../pages/login-page';
+import DetailPage from '../pages/detail-page';
 import ProtectedRoute from '../general/protected-route';
 
 export default class App extends Component {
@@ -43,9 +44,6 @@ export default class App extends Component {
 
   componentWillMount = () => {
     this.getShops();
-  };
-
-  componentDidMount = () => {
     this.getStoredAuth();
   };
 
@@ -92,6 +90,13 @@ export default class App extends Component {
             isAuthed={this.isAuthed()}
             saveUser={this.saveUser}
             saveToken={this.saveToken}
+          />
+          <Route
+            path="/shop/:id"
+            render={({ match }) => {
+              const shop = this.state.shops.find(el => el._id === match.params.id);
+              return <DetailPage shop={shop} />;
+            }}
           />
           <Route
             exact
