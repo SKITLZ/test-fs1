@@ -1,3 +1,21 @@
 .day-list__item span {
   display: inline-block;
 }
+
+.shop-list-item__name::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.shop-list-item__btn {
+  width: 35px;
+  margin: 3px;
+}
+
+.shop-list-item__name b {
+  margin-bottom: .5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}

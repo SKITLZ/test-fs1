@@ -38,7 +38,7 @@ export default class App extends Component {
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   };
 
   componentWillMount = () => {
@@ -58,6 +58,24 @@ export default class App extends Component {
 
   isAuthed = () => {
     return this.state.token ? true : false;
+  };
+
+  handleDelete = (id) => {
+    const index = this.state.shops.findIndex(el => el._id === id);
+    
+    axios.delete(`/api/shops/${id}`, {
+      headers: {
+        authorization: `Bearer ${this.state.token}`,
+      },
+    })
+      .then(() => {
+        const newArray = [...this.state.shops];
+        newArray.splice(index, 1);
+        this.setState({ shops: newArray });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   render() {
@@ -81,7 +99,10 @@ export default class App extends Component {
             render={() => (
               <React.Fragment>
                 <h1>Foo Shops Welcome page</h1>
-                <ShopList shops={this.state.shops} />
+                <ShopList
+                  shops={this.state.shops}
+                  handleDelete={this.handleDelete}
+                />
               </React.Fragment>
             )}
           />

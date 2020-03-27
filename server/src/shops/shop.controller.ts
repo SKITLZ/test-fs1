@@ -44,8 +44,12 @@ export class ShopsController {
   }
 
   @Delete(':id')
-  async removeShop(@Param('id') shopId: string): Promise<string> {
-    await this.shopsService.deleteShop(shopId);
+  @UseGuards(new AuthGuard())
+  async removeShop(
+    @Req() req: { user: { userId: string } },
+    @Param('id') shopId: string,
+  ): Promise<string> {
+    await this.shopsService.deleteShop(req.user.userId, shopId);
     return `Shop with id: ${shopId} has been successfuly deleted`;
   }
 }

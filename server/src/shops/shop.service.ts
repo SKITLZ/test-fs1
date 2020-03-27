@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -28,7 +28,10 @@ export class ShopsService {
     return await this.findShop(shopId);
   }
 
-  async deleteShop(shopId: string) {
+  async deleteShop(userId: string, shopId: string) {
+    const shop = await this.shopModel.findById(shopId);
+    if (String(shop.user) != userId) throw new ForbiddenException('You don\'t have the access rights to edit this shop');
+
     const result = await this.shopModel.deleteOne({_id: shopId}).exec();
     if (result.n === 0) throw new NotFoundException('Could not find shop');
     // return await this.shopModel.findByIdAndRemove(shopId)

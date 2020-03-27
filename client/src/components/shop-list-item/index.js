@@ -98,6 +98,10 @@ export default class App extends Component {
   // При сохранении, если from > to (то поменять их местами)
   // saveShop = () => {};
 
+  handleDelete = () => {
+    this.props.handleDelete(this.props._id);
+  };
+
   render() {
     const description = this.props.description ? <p>{ this.props.description }</p> : null;
     const days = this.props.schedule.map((day, dayIndex) => {
@@ -151,8 +155,27 @@ export default class App extends Component {
     // });
 
     return (
-      <div>
-        <p><b className="h4">{ this.props.name }</b></p>
+      <div className="shop-list-item">
+        <p className="shop-list-item__name">
+          <b>{ this.props.name }</b>
+          <span className="float-right">
+            <button
+              type="button"
+              className="shop-list-item__btn btn btn-outline-warning btn-sm"
+              aria-label="Edit shop"
+            >
+              <i className="fa fa-edit"></i>
+            </button>
+            <button
+              type="button"
+              className="shop-list-item__btn btn btn-outline-danger btn-sm"
+              aria-label="Delete shop"
+              onClick={this.handleDelete}
+            >
+              <i className="fa fa-trash-o"></i>
+            </button>
+          </span>
+          </p>
         { description }
         <p>{ this.state.shopIsWorking ? 'Shop is working' : 'Closed' }</p>
         <p>Current time: { this.state.curTime }</p> {/* Для дебага */}
