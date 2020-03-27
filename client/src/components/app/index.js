@@ -6,7 +6,7 @@ import './app.css';
 
 import ShopList from '../shop-list';
 
-axios.get('/api/products/')
+axios.get('/api/shops/')
   .then((res) => {
     console.log(res.data);
   })

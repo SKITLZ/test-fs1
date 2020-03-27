@@ -44,11 +44,10 @@ export class UsersService {
 
     return user.save()
       .then((res) => {
-        console.log(res);
-        const { id, name, email, products } = res;
+        const { id, name, email } = res;
         return {
           token: this.jwtSignToken(id),
-          user: { id, name, email, products },
+          user: { id, name, email },
           message: 'User has been created',
         };
       })
@@ -80,7 +79,6 @@ export class UsersService {
     return {
       token: this.jwtSignToken(user.id),
       user: {
-        products: user.products,
         id: user.id,
         name: user.name,
         email: user.email,
