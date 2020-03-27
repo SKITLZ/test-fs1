@@ -81,6 +81,10 @@ export default class App extends Component {
     }, 1000 * 1);
   };
 
+  componentWillUnmount = () => {
+    clearInterval(this.updateSetInterval);
+  };
+
   updateShop = () => {
     this.setState({ curTime: this.getCurTime() });
     this.checkIsWorking();
