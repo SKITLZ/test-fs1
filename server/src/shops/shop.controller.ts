@@ -20,7 +20,6 @@ export class ShopsController {
   }
 
   @Get()
-  @UseGuards(new AuthGuard())
   getAllShops(): Promise<Shop[]> {
     return this.shopsService.getAllShops();
   }
