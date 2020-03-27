@@ -105,7 +105,9 @@ export default class App extends Component {
   };
 
   render() {
-    const description = this.props.description ? <p>{ this.props.description }</p> : null;
+    const descriptionElem = this.props.description ? <p>{ this.props.description }</p> : null;
+    const addressElem = this.props.address ? <p>Address: { this.props.address }</p> : null;
+
     if (!this.props.schedule) return null; // state isn't ready
     const days = this.props.schedule.map((day, dayIndex) => {
       const workTime = day.workTime;
@@ -180,9 +182,11 @@ export default class App extends Component {
             </button>
           </span>
           </p>
-        { description }
+        { descriptionElem }
+        { addressElem }
         <p>{ this.state.shopIsWorking ? 'Shop is working' : 'Closed' }</p>
         <p>Current time: { this.state.curTime }</p> {/* Для дебага */}
+        <p>Schedule:</p>
         <ul className="day-list">
           { days }
         </ul>
