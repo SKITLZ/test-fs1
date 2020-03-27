@@ -1,0 +1,4 @@
+.day-list__item {
+  display: flex;
+  flex-wrap: wrap;
+}

@@ -4,12 +4,12 @@ import './detail-page.css';
 
 import ShopListItem from '../../shop-list-item';
 
-const DetailPage = ({ shop }) => {
+const DetailPage = ({ shop, handlePatch }) => {
   if (!shop) return <h2>Loading...</h2>
 
   return (
     <div className="detail-page">
-      <ShopListItem { ...shop } isDetailed={true} />
+      <ShopListItem shop={shop} handlePatch={handlePatch} isDetail />
     </div>
   );
 };

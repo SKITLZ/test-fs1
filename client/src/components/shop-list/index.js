@@ -8,7 +8,7 @@ const ShopList = ({ shops, ...otherProps }) => {
   const elements = shops.map((shop) => {
     return (
       <li className="shop-list__item list-group-item" key={shop._id}>
-        <ShopListItem { ...shop } { ...otherProps } />
+        <ShopListItem shop={shop} { ...otherProps } />
       </li>
     );
   });

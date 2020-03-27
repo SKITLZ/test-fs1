@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 
 import './shop-list-item.css';
 
-// For detailed page
-// import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
 import { Link } from 'react-router-dom';
+import DayList from '../day-list';
 
 export default class App extends Component {
   state = {
@@ -13,18 +12,12 @@ export default class App extends Component {
     curDayIndex: weekDayMap[fullWeekDay], // date-helpers
     curTime: this.getCurTime(),
     shopIsWorking: false,
+    shop: { ...this.props.shop },
   };
-
-  // For detailed page
-  // onTimeRangeChange = (time, index) => {
-  //   const times = [...this.state.times]; // Shallow копия
-  //   times[index].time = time; // Обновление единственного времени
-  //   return this.setState({ times });
-  // };
 
   componentDidMount = () => {
     this.updateShop();
-    
+
     this.updateSetInterval = setInterval(() => {
       this.updateShop();
     }, 1000 * 1);
@@ -40,7 +33,7 @@ export default class App extends Component {
   };
 
   getCurTime() {
-    // Собирает строку вида HHmm
+    // Builds a string formatted HHmm
     const date = new Date();
     const hours = date.getHours();
     const minutes = date.getSeconds();
@@ -54,7 +47,7 @@ export default class App extends Component {
   };
 
   checkIsWorking = () => {
-    const { schedule } = this.props;
+    const { schedule } = this.state.shop;
     if (!schedule) return null; // state isn't ready
     const todaySchedule = schedule[this.state.curDayIndex];
 
@@ -68,7 +61,6 @@ export default class App extends Component {
     const time = todaySchedule.workTime.map(el => el || '00:00');
     const from = time[0].replace(':', '');
     const to = time[1].replace(':', '');
-    // if ((from <= this.state.curTime) && (to >= this.state.curTime)) {
     if (from > this.state.curTime || to < this.state.curTime) {
       this.setState({ shopIsWorking: false });
       return;
@@ -97,99 +89,89 @@ export default class App extends Component {
   };
 
   // For detailed page
-  // При сохранении, если from > to (то поменять их местами)
-  // saveShop = () => {};
+  saveShop = () => {
+    const newShop = { ...this.state.shop }; // Shallow copy
+    this.props.handlePatch(newShop);
+  };
 
   handleDelete = () => {
-    this.props.handleDelete(this.props._id);
+    this.props.handleDelete(this.state.shop._id);
+  };
+
+  // For detailed page
+  onTimeRangeChange = (time, dayIndex, timeOffIndex, main = false) => {
+    const newShop = { ...this.state.shop }; // Shallow copy
+    if (main) {
+      newShop.schedule[dayIndex].workTime = time;
+      this.setState({ shop: newShop });
+      return;
+    }
+    newShop.schedule[dayIndex].timeOffs[timeOffIndex].time = time;
+    this.setState({ shop: newShop });
   };
 
   render() {
-    const descriptionElem = this.props.description ? <p>{ this.props.description }</p> : null;
-    const addressElem = this.props.address ? <p>Address: { this.props.address }</p> : null;
+    const { _id, name, description, address, schedule } = this.state.shop;
+    const descriptionElem
+      = description
+      ? <p>{ description }</p>
+      : null;
+    const addressElem
+      = address
+      ? <p>Address: { address }</p>
+      : null;
 
-    if (!this.props.schedule) return null; // state isn't ready
-    const days = this.props.schedule.map((day, dayIndex) => {
-      const workTime = day.workTime;
-      let timeElem = ''
-      if (day.closed) {
-        timeElem = <span className="text-danger pr-3">Closed</span>
-      } else {
-        timeElem = <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
-      }
+    const controls = (
+      <span className="float-right">
+        <Link
+          className="shop-list-item__btn btn btn-outline-warning btn-sm"
+          aria-label="Edit shop"
+          to={`/shop/${_id}`}
+        >
+          <i className="fa fa-edit"></i>
+        </Link>
+        <button
+          type="button"
+          className="shop-list-item__btn btn btn-outline-danger btn-sm"
+          aria-label="Delete shop"
+          onClick={this.handleDelete}
+        >
+          <i className="fa fa-trash-o"></i>
+        </button>
+      </span>
+    )
 
-      let timeOffsElems = null;
-      if (day.timeOffs) {
-        timeOffsElems = day.timeOffs.map((time, timeIndex) => {
-          return (
-            <span
-              className="text-danger pr-3"
-              key={timeIndex}
-            >{time.time[0]}-{time.time[1]} {time.label};</span>
-          )
-        })
-      }
+    const saveShopBtn = (
+      <button
+        className="btn btn-warning"
+        type="button"
+        onClick={this.saveShop}
+      >Сохранить изменения</button>
+    )
 
-      return (
-        <li className="day-list__item mb-3" key={day.day}>
-          <div>
-            <span className="pr-2">{day.day}:</span>
-            { timeElem }
-            { timeOffsElems }
-          </div>
-        </li>
-      )
-    })
-
-    // For detailed page
-    // const timers = this.state.times.map((el, index) => {
-    //   const { label, time } = el;
-    //   return (
-    //     <div key={index}>
-    //       <p>{time[0]} - {time[1]} {label}</p>
-    //       {/* <TimeRangePicker
-    //         onChange={(time) => this.onTimeRangeChange(time, index)}
-    //         value={time}
-    //         format={"HH:mm"}
-    //         clearIcon={null}
-    //         disableClock
-    //         required
-    //       /> */}
-    //   </div>
-    //   )
-    // });
+    const { isDetail } = this.props;
 
     return (
       <div className="shop-list-item">
         <p className="shop-list-item__name">
-          <b>{ this.props.name }</b>
-          <span className="float-right">
-            <Link
-              type="button"
-              className="shop-list-item__btn btn btn-outline-warning btn-sm"
-              aria-label="Edit shop"
-              to={`/shop/${this.props._id}`}
-            >
-              <i className="fa fa-edit"></i>
-            </Link>
-            <button
-              type="button"
-              className="shop-list-item__btn btn btn-outline-danger btn-sm"
-              aria-label="Delete shop"
-              onClick={this.handleDelete}
-            >
-              <i className="fa fa-trash-o"></i>
-            </button>
-          </span>
+          <b>{ name }</b>
+          { isDetail ? null : controls }
           </p>
         { descriptionElem }
         { addressElem }
-        <p>{ this.state.shopIsWorking ? 'Shop is working' : 'Closed' }</p>
-        <p>Current time: { this.state.curTime }</p> {/* Для дебага */}
+        <p>{
+          this.state.shopIsWorking
+            ? <span className="text-success">Shop is working</span>
+            : <span className="text-danger">Closed</span>
+        }</p>
+        <p>Current time (for debug): { this.state.curTime }</p> {/* Для дебага */}
         <p>Schedule:</p>
-        <ul className="day-list">
-          { days }
-        </ul>
+        <DayList
+          schedule={schedule}
+          onTimeRangeChange={this.onTimeRangeChange}
+          isDetail={isDetail}
+        />
+        { isDetail ? saveShopBtn : null }
       </div>
     );
   };

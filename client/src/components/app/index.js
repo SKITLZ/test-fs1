@@ -76,6 +76,18 @@ export default class App extends Component {
       });
   };
 
+  handlePatch = (shop) => {
+    axios.patch(`/api/shops/${shop._id}`, shop, {
+      headers: {
+        authorization: `Bearer ${this.state.token}`,
+      },
+    })
+      .then()
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   render() {
     return (
       <div className="foo-shops-app">
@@ -95,7 +107,7 @@ export default class App extends Component {
             path="/shop/:id"
             render={({ match }) => {
               const shop = this.state.shops.find(el => el._id === match.params.id);
-              return <DetailPage shop={shop} />;
+              return <DetailPage shop={shop} handlePatch={this.handlePatch} />;
             }}
           />
           <Route
