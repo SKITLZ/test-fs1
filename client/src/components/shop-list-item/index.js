@@ -110,16 +110,79 @@ export default class App extends Component {
     this.setState({ shop: newShop });
   };
 
+  handleInputChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const newShop = { ...this.state.shop }; // Shallow copy
+    newShop[name] = value;
+    this.setState({ shop: newShop });
+  };
+
   render() {
+    const { isDetail, user } = this.props;
     const { _id, name, description, address, schedule } = this.state.shop;
-    const descriptionElem
-      = description
-      ? <p>{ description }</p>
-      : null;
-    const addressElem
-      = address
-      ? <p>Address: { address }</p>
-      : null;
+
+    let showControls = false;
+    if (user && user.id) {
+      showControls = (user.id === this.state.shop.user && !isDetail);
+    }
+
+    let nameElem = null;
+    if (isDetail) {
+      nameElem = (
+        <label className="form-group w-100">
+          Name
+          <input
+            className="form-control"
+            type="text"
+            name="name"
+            placeholder="Shop name"
+            required
+            value={this.state.shop.name}
+            onChange={this.handleInputChange} />
+        </label>
+      )
+    } else {
+      nameElem = <b>{ name }</b>
+    }
+    
+    let descriptionElem = null;
+    if (isDetail) {
+      descriptionElem = (
+        <label className="form-group w-100">
+          Description
+          <input
+            className="form-control"
+            type="text"
+            name="description"
+            placeholder="Describe this shop"
+            required
+            value={this.state.shop.description}
+            onChange={this.handleInputChange} />
+        </label>
+      )
+    } else {
+      descriptionElem = <p>{ description }</p>
+    }
+
+    let addressElem = null;
+    if (isDetail) {
+      addressElem = (
+        <label className="form-group w-100">
+          Address
+          <input
+            className="form-control"
+            type="text"
+            name="address"
+            placeholder="Shop address"
+            required
+            value={this.state.shop.address}
+            onChange={this.handleInputChange} />
+        </label>
+      )
+    } else {
+      addressElem = <p>Address: { address }</p>
+    }
 
     const controls = (
       <span className="float-right">
@@ -149,14 +212,12 @@ export default class App extends Component {
       >Сохранить изменения</button>
     )
 
-    const { isDetail } = this.props;
-
     return (
       <div className="shop-list-item">
-        <p className="shop-list-item__name">
-          <b>{ name }</b>
-          { isDetail ? null : controls }
-          </p>
+        <p className={isDetail ? 'mb-0' : 'shop-list-item__name'}>
+          { nameElem }
+          { showControls ? controls : null }
+        </p>
         { descriptionElem }
         { addressElem }
         <p>{

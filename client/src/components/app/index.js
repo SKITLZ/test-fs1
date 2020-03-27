@@ -77,12 +77,18 @@ export default class App extends Component {
   };
 
   handlePatch = (shop) => {
+    const index = this.state.shops.findIndex(el => el._id === shop._id);
+    
     axios.patch(`/api/shops/${shop._id}`, shop, {
       headers: {
         authorization: `Bearer ${this.state.token}`,
       },
     })
-      .then()
+      .then(() => {
+        const newArray = [...this.state.shops];
+        newArray.splice(index, 1, shop);
+        this.setState({ shops: newArray });
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -119,6 +125,7 @@ export default class App extends Component {
                 <ShopList
                   shops={this.state.shops}
                   handleDelete={this.handleDelete}
+                  user={this.state.user}
                 />
               </React.Fragment>
             )}
