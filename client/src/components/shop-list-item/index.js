@@ -63,7 +63,6 @@ export default class App extends Component {
     curDay: fullWeekDay, // date-helpers
     curDayIndex: weekDayMap[fullWeekDay], // date-helpers
     curTime: this.getCurTime(),
-    updateSetInterval: null,
     shopIsWorking: false,
   };
 
@@ -77,7 +76,7 @@ export default class App extends Component {
   componentDidMount = () => {
     this.updateShop();
     
-    this.state.updateSetInterval = setInterval(() => {
+    this.updateSetInterval = setInterval(() => {
       this.updateShop();
     }, 1000 * 1);
   };
