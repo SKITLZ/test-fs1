@@ -8,11 +8,13 @@ import { Shop } from './shop.model'
 export class ShopsService {
   constructor(@InjectModel('Shop') private readonly shopModel: Model<Shop>) {}
 
-  async addShop(user: string, title: string, desc: string, price: number) {
+  async addShop(user: string, name: string, description: string, address: string, isClosed: boolean, schedule: []) {
     const newShop = new this.shopModel({
-      title,
-      description: desc,
-      price,
+      name,
+      description,
+      address,
+      isClosed,
+      schedule,
       user,
     });
     return await newShop.save(); // because mongoose created model :11 new this.shopModel, it also has 'magic' methods like .save();
@@ -32,11 +34,13 @@ export class ShopsService {
     // return await this.shopModel.findByIdAndRemove(shopId)
   }
 
-  async updateShop(shopId: string, title: string, description: string, price: number) {
+  async updateShop(shopId: string, name: string, description: string, address: string, isClosed: boolean, schedule: []) {
     const updateShop = await this.findShop(shopId);
-    if (title) updateShop.title = title;
+    if (name) updateShop.name = name;
     if (description) updateShop.description = description;
-    if (price) updateShop.price = price;
+    if (address) updateShop.address = address;
+    if (isClosed === true || isClosed === false) updateShop.isClosed = isClosed;
+    if (schedule) updateShop.schedule = schedule;
     return await updateShop.save();
     // return await this.shopModel.findByIdAndUpdate(
     //   shopId,

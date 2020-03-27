@@ -12,11 +12,13 @@ export class ShopsController {
   @UseGuards(new AuthGuard())
   addShop(
     @Req() req: { user: { userId: string } },
-    @Body('title') prodTitle: string,
-    @Body('description') prodDesc: string,
-    @Body('price') prodPrice: number,
+    @Body('name') name: string,
+    @Body('description') description: string,
+    @Body('address') address: string,
+    @Body('isClosed') isClosed: boolean,
+    @Body('schedule') schedule: [],
   ): Promise<Shop> {
-    return this.shopsService.addShop(req.user.userId, prodTitle, prodDesc, prodPrice);
+    return this.shopsService.addShop(req.user.userId, name, description, address, isClosed, schedule);
   }
 
   @Get()
@@ -25,23 +27,25 @@ export class ShopsController {
   }
 
   @Get(':id')
-  getShop(@Param('id') prodId: string): Promise<Shop> {
-    return this.shopsService.getShop(prodId);
+  getShop(@Param('id') shopId: string): Promise<Shop> {
+    return this.shopsService.getShop(shopId);
   }
 
   @Patch(':id')
   updateShop(
-    @Param('id') prodId: string,
-    @Body('title') prodTitle: string,
-    @Body('description') prodDesc: string,
-    @Body('price') prodPrice: number,
+    @Param('id') shopId: string,
+    @Body('name') name: string,
+    @Body('description') description: string,
+    @Body('address') address: string,
+    @Body('isClosed') isClosed: boolean,
+    @Body('schedule') schedule: [],
   ): Promise<Shop> {
-    return this.shopsService.updateShop(prodId, prodTitle, prodDesc, prodPrice);
+    return this.shopsService.updateShop(shopId, name, description, address, isClosed, schedule);
   }
 
   @Delete(':id')
-  async removeShop(@Param('id') prodId: string): Promise<string> {
-    await this.shopsService.deleteShop(prodId);
-    return `Shop with id: ${prodId} has been successfuly deleted`;
+  async removeShop(@Param('id') shopId: string): Promise<string> {
+    await this.shopsService.deleteShop(shopId);
+    return `Shop with id: ${shopId} has been successfuly deleted`;
   }
 }
