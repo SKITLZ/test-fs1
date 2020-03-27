@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './shop-list-item.css';
 
-// Для детальной страницы
+// For detailed page
 // import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
 
@@ -37,7 +37,7 @@ export default class App extends Component {
       },
       {
         day: 'Friday',
-        workTime: ['09:00', '16:00'],
+        workTime: ['09:20', '09:40'],
       },
       {
         day: 'Saturday',
@@ -67,7 +67,7 @@ export default class App extends Component {
     shopIsWorking: false,
   };
 
-  // Для детальной страницы
+  // For detailed page
   // onTimeRangeChange = (time, index) => {
   //   const times = [...this.state.times]; // Shallow копия
   //   times[index].time = time; // Обновление единственного времени
@@ -105,13 +105,31 @@ export default class App extends Component {
     const { schedule } = this.state;
     const todaySchedule = schedule[this.state.curDayIndex];
 
+    // Is today closed
     if (todaySchedule.closed) {
       this.setState({ shopIsWorking: false });
       return;
     }
 
+    // Is during work time
+    const time = todaySchedule.workTime.map(el => el || '00:00');
+    const from = time[0].replace(':', '');
+    const to = time[1].replace(':', '');
+    // if ((from <= this.state.curTime) && (to >= this.state.curTime)) {
+    if (from > this.state.curTime || to < this.state.curTime) {
+      this.setState({ shopIsWorking: false });
+      return;
+    }
+
+    // Has time offs
+    if (!todaySchedule.timeOffs) {
+      this.setState({ shopIsWorking: true });
+      return;
+    }
+
+    // Is during time offs
     for (let i = 0; i < todaySchedule.timeOffs.length; i++) {
-      // Если время == null, то заменяет на строку '00:00'
+      // If time == null, change it to '00:00'
       const time = todaySchedule.timeOffs[i].time.map(el => el || '00:00');
       const from = time[0].replace(':', '');
       const to = time[1].replace(':', '');
@@ -125,7 +143,7 @@ export default class App extends Component {
     this.setState({ shopIsWorking: true });
   };
 
-  // Для детальной страницы
+  // For detailed page
   // При сохранении, если from > to (то поменять их местами)
   // saveShop = () => {};
 
@@ -163,7 +181,7 @@ export default class App extends Component {
       )
     })
 
-    // Для детальной страницы
+    // For detailed page
     // const timers = this.state.times.map((el, index) => {
     //   const { label, time } = el;
     //   return (
