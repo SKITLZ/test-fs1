@@ -8,58 +8,6 @@ import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
 
 export default class App extends Component {
   state = {
-    schedule: [
-      {
-        day: 'Monday',
-        workTime: ['09:00', '17:00'],
-      },
-      {
-        day: 'Tuesday',
-        workTime: ['09:00', '17:00'],
-      },
-      {
-        day: 'Wednesday',
-        workTime: ['09:00', '17:00'],
-      },
-      {
-        day: 'Thursday',
-        workTime: ['09:00', '17:00'],
-        timeOffs: [
-          {
-            label: 'Lunch break',
-            time: ['12:10', '12:20'],
-          },
-          {
-            label: 'Afterparty',
-            time: ['12:30', '12:40'],
-          },
-        ],
-      },
-      {
-        day: 'Friday',
-        workTime: ['09:20', '09:40'],
-      },
-      {
-        day: 'Saturday',
-        workTime: ['09:00', '17:00'],
-        closed: true,
-      },
-      {
-        day: 'Sunday',
-        workTime: ['09:00', '17:00'],
-        closed: true,
-      },
-    ],
-    // times: [
-    //   {
-    //     label: 'Lunch break',
-    //     time: ['00:10', '00:20'],
-    //   },
-    //   {
-    //     label: 'Afterparty',
-    //     time: ['00:30', '00:40'],
-    //   },
-    // ],
     curDay: fullWeekDay, // date-helpers
     curDayIndex: weekDayMap[fullWeekDay], // date-helpers
     curTime: this.getCurTime(),
@@ -105,7 +53,7 @@ export default class App extends Component {
   };
 
   checkIsWorking = () => {
-    const { schedule } = this.state;
+    const { schedule } = this.props;
     const todaySchedule = schedule[this.state.curDayIndex];
 
     // Is today closed
@@ -152,7 +100,7 @@ export default class App extends Component {
 
   render() {
     const description = this.props.description ? <p>{ this.props.description }</p> : null;
-    const days = this.state.schedule.map((day, dayIndex) => {
+    const days = this.props.schedule.map((day, dayIndex) => {
       const workTime = day.workTime;
       let timeElem = ''
       if (day.closed) {

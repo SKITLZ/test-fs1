@@ -9,25 +9,11 @@ import AppHeader from '../app-header';
 import Login from '../pages/login-page';
 import ProtectedRoute from '../general/protected-route';
 
-axios.get('/api/shops/')
-  .then((res) => {
-    console.log(res.data);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-
 export default class App extends Component {
   state = {
     user: {},
     token: '',
-    shops: [
-      { id: 1, name: 'Where', description: 'Where is the money, Lebowski', address: 'Liverpool, Penny Lane 32a' },
-      { id: 2, name: 'is', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium temporibus possimus optio quaerat dignissimos molestiae ullam modi quos id officiis repellendus, vel ducimus sint minima cupiditate eaque? Corrupti, mollitia exercitationem!', address: 'Liverpool, Penny Lane 32a', isClosed: true },
-      { id: 3, name: 'the' },
-      { id: 4, name: 'money' },
-      { id: 5, name: 'Lebowski' },
-    ],
+    shops: [],
   };
 
   saveUser = (user) => {
@@ -45,10 +31,21 @@ export default class App extends Component {
     this.setState({ token: localStorage.getItem('token') });
   };
 
+  getShops = () => {
+    axios.get('/api/shops/')
+      .then((res) => {
+        this.setState({ shops: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  };
+
+  componentWillMount = () => {
+    this.getShops();
+  };
+
   componentDidMount = () => {
-    console.log('app rops:', this.props);
-    console.log('user:', JSON.parse(localStorage.getItem('user')));
-    console.log('token:', localStorage.getItem('token'));
     this.getStoredAuth();
   };
 
@@ -71,11 +68,6 @@ export default class App extends Component {
             isAuthed={this.isAuthed()}
             resetAuth={this.resetAuth}
           />
-          {/* <Route
-            path="/login"
-            render={() => (
-              <Login saveUser={this.saveUser} saveToken={this.saveToken} />
-            )} /> */}
           <ProtectedRoute
             path="/login"
             component={Login}

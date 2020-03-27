@@ -7,7 +7,7 @@ import ShopListItem from '../shop-list-item'
 const ShopList = ({ shops }) => {
   const elements = shops.map((shop) => {
     return (
-      <li className="shop-list__item list-group-item" key={shop.id}>
+      <li className="shop-list__item list-group-item" key={shop._id}>
         <ShopListItem { ...shop } />
       </li>
     );
