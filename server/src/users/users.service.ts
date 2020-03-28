@@ -61,7 +61,6 @@ export class UsersService {
       .then((user) => {
         if (!password || password.length < 6) throw new NotAcceptableException('Password must be at least 6 characters long')
         if (!user) throw new UnauthorizedException('Authentication failed'); // 401 statusCode
-        console.log(user);
 
         return this.asyncAuth(user, password);
       });

@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route } from 'react-router-dom';
 import axios from 'axios';
 
 import './app.css';
+import newShopMock from '../../mock/new-shop-mock';
 
 import ShopList from '../shop-list';
 import AppHeader from '../app-header';
@@ -94,6 +95,22 @@ export default class App extends Component {
       });
   };
 
+  handleCreate = (shop) => {
+    axios.post(`/api/shops`, shop, {
+      headers: {
+        authorization: `Bearer ${this.state.token}`,
+      },
+    })
+      .then((res) => {
+        const newArray = [...this.state.shops];
+        newArray.push(res.data);
+        this.setState({ shops: newArray });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   render() {
     return (
       <div className="foo-shops-app">
@@ -108,6 +125,12 @@ export default class App extends Component {
             isAuthed={this.isAuthed()}
             saveUser={this.saveUser}
             saveToken={this.saveToken}
+          />
+          <Route
+            path="/new"
+            render={() => {
+              return <DetailPage shop={newShopMock} handleSaveBtn={this.handleCreate} createNew />;
+            }}
           />
           <Route
             path="/shop/:id"

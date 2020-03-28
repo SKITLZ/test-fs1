@@ -236,7 +236,9 @@ export default class App extends Component {
         type="button"
         onClick={this.saveShop}
         disabled={!this.state.shop.name.length}
-      >Save changes</button>
+      >
+        { this.props.createNew ? 'Create shop' : 'Save changes' }
+      </button>
     )
 
     const isClosedElem = (
