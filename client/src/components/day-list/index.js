@@ -10,6 +10,7 @@ const DayList = ({
   schedule,
   isDetail,
   onTimeRangeChange,
+  handleIsClosedCheckbox,
   handleAddTimeOff,
   handleDeleteTimeOff,
   handleTimeOffLabelChange,
@@ -19,7 +20,10 @@ const DayList = ({
   const days = schedule.map((day, dayIndex) => {
     const workTime = day.workTime;
     const openTimesElem = <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
-    const closedElem = <span className="text-danger pr-3">Closed</span>
+
+    let closedElem = null;
+    if (isDetail) closedElem = <span className="text-danger w-100 mt-2">Closed</span>;
+    else closedElem = <span className="text-danger pr-3">Closed</span>;
 
     let addTimeOffElem = null;
     if (isDetail) {
@@ -108,11 +112,23 @@ const DayList = ({
         )
       })
     }
+
+    const isClosedCheckbox = (
+      <label className="day-list__checkbox-label input-group-text">
+        Closed this day
+        <input
+          className="ml-2"
+          type="checkbox"
+          name="isClosed"
+          checked={day.closed || false}
+          onChange={(e) => handleIsClosedCheckbox(e, dayIndex)} />
+      </label>
+    );
     
     return (
-      <li className="mb-3" key={day.day}>
+      <li className={isDetail ? 'mb-5' : 'mb-3'} key={day.day}>
         <div className="day-list__item">
-          <span className="pr-2">{day.day}:</span>
+          <span className="day-list__name pr-2">{day.day}: { isDetail ? isClosedCheckbox : null}</span>
           { timeElem }
           { timeOffsElems }
         </div>

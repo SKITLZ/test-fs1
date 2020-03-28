@@ -3,6 +3,17 @@
   flex-wrap: wrap;
 }
 
+.day-list__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.day-list__checkbox-label {
+  margin-bottom: 0;
+  margin-left: 10px;
+}
+
 .day-list__time-off {
   display: flex;
   align-items: center;
@@ -15,6 +26,3 @@
   max-width: 300px;
 }
 
-.day-list__del-time-off {
-
-}

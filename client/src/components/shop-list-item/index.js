@@ -126,10 +126,17 @@ export default class App extends Component {
     this.setState({ shop: newShop });
   };
 
-  handleIsClosedCheckbox = (e) => {
+  handleIsClosedCheckbox = (e, dayIndex) => {
     const value = e.target.checked;
     const newShop = { ...this.state.shop }; // Shallow copy
-    newShop.isClosed = value;
+
+    // If it's general shop status
+    if (dayIndex === undefined) {
+      newShop.isClosed = value;
+      this.setState({ shop: newShop });
+      return;
+    }
+    newShop.schedule[dayIndex].closed = value;
     this.setState({ shop: newShop });
   };
 
@@ -274,6 +281,7 @@ export default class App extends Component {
           schedule={schedule}
           isDetail={isDetail}
           onTimeRangeChange={this.onTimeRangeChange}
+          handleIsClosedCheckbox={this.handleIsClosedCheckbox}
           handleAddTimeOff={this.handleAddTimeOff}
           handleDeleteTimeOff={this.handleDeleteTimeOff}
           handleTimeOffLabelChange={this.handleTimeOffLabelChange}
