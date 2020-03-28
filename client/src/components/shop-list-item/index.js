@@ -128,8 +128,33 @@ export default class App extends Component {
   handleIsClosedCheckbox = (e) => {
     const value = e.target.checked;
     const newShop = { ...this.state.shop }; // Shallow copy
-    console.log(value);
     newShop.isClosed = value;
+    this.setState({ shop: newShop });
+  };
+
+  handleAddTimeOff = (dayIndex) => {
+    const newShop = { ...this.state.shop }; // Shallow copy
+    if (!newShop.schedule[dayIndex].timeOffs) {
+      Object.assign(newShop.schedule[dayIndex], { timeOffs: [] });
+    }
+    const timeOffsTemplate = {
+      label: '',
+      time: ['13:00', '14:00'],
+    };
+    newShop.schedule[dayIndex].timeOffs.push(timeOffsTemplate);
+    this.setState({ shop: newShop });
+  };
+
+  handleDeleteTimeOff = (dayIndex, timeOffIndex) => {
+    const newShop = { ...this.state.shop }; // Shallow copy
+    newShop.schedule[dayIndex].timeOffs.splice(timeOffIndex, 1);
+    this.setState({ shop: newShop });
+  };
+
+  handleTimeOffLabelChange = (e, dayIndex, timeOffIndex) => {
+    const value = e.target.value;
+    const newShop = { ...this.state.shop }; // Shallow copy
+    newShop.schedule[dayIndex].timeOffs[timeOffIndex].label = value;
     this.setState({ shop: newShop });
   };
 
@@ -220,7 +245,7 @@ export default class App extends Component {
           className="ml-2"
           type="checkbox"
           name="isClosed"
-          checked={this.state.shop.isClosed}
+          checked={isClosed}
           onChange={this.handleIsClosedCheckbox} />
       </label>
     )
@@ -243,8 +268,11 @@ export default class App extends Component {
         <p>Schedule:</p>
         <DayList
           schedule={schedule}
-          onTimeRangeChange={this.onTimeRangeChange}
           isDetail={isDetail}
+          onTimeRangeChange={this.onTimeRangeChange}
+          handleAddTimeOff={this.handleAddTimeOff}
+          handleDeleteTimeOff={this.handleDeleteTimeOff}
+          handleTimeOffLabelChange={this.handleTimeOffLabelChange}
         />
         { isDetail ? saveShopBtn : null }
       </div>
