@@ -115,7 +115,7 @@ const DayList = ({
 
     const isClosedCheckbox = (
       <label className="day-list__checkbox-label input-group-text">
-        Closed this day
+        Close this day
         <input
           className="ml-2"
           type="checkbox"
