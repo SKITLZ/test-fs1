@@ -96,9 +96,10 @@ export default class App extends Component {
   };
 
   // For detailed page
-  saveShop = () => {
+  saveShop = async () => {
     const newShop = { ...this.state.shop }; // Shallow copy
-    this.props.handleSaveBtn(newShop);
+    const redirect = await this.props.handleSaveBtn(newShop);
+    if (redirect) this.props.history.push('/');
   };
 
   handleDelete = () => {

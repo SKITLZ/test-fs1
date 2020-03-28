@@ -80,7 +80,7 @@ export default class App extends Component {
   handlePatch = (shop) => {
     const index = this.state.shops.findIndex(el => el._id === shop._id);
     
-    axios.patch(`/api/shops/${shop._id}`, shop, {
+    return axios.patch(`/api/shops/${shop._id}`, shop, {
       headers: {
         authorization: `Bearer ${this.state.token}`,
       },
@@ -89,6 +89,7 @@ export default class App extends Component {
         const newArray = [...this.state.shops];
         newArray.splice(index, 1, shop);
         this.setState({ shops: newArray });
+        return true;
       })
       .catch((err) => {
         console.log(err);
@@ -96,7 +97,7 @@ export default class App extends Component {
   };
 
   handleCreate = (shop) => {
-    axios.post(`/api/shops`, shop, {
+    return axios.post(`/api/shops`, shop, {
       headers: {
         authorization: `Bearer ${this.state.token}`,
       },
@@ -105,6 +106,7 @@ export default class App extends Component {
         const newArray = [...this.state.shops];
         newArray.push(res.data);
         this.setState({ shops: newArray });
+        return true;
       })
       .catch((err) => {
         console.log(err);

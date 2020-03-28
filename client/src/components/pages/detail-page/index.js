@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route } from "react-router-dom";
 
 import './detail-page.css';
 
@@ -8,9 +9,15 @@ const DetailPage = ({ shop, handleSaveBtn, createNew }) => {
   if (!shop) return <h2>Loading...</h2>
 
   return (
-    <div className="detail-page">
-      <ShopListItem shop={shop} handleSaveBtn={handleSaveBtn} createNew={createNew} isDetail />
-    </div>
+    <Route
+      render={(props) => {
+        return (
+          <div className="detail-page">
+            <ShopListItem shop={shop} handleSaveBtn={handleSaveBtn} createNew={createNew} isDetail history={props.history} />
+          </div>
+        );
+      }}
+    />
   );
 };
 
