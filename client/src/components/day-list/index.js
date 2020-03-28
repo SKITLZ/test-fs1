@@ -5,7 +5,7 @@ import './day-list.css';
 // For detailed page
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 
-const DayList = ({ schedule, isClosed, onTimeRangeChange, isDetail}) => {
+const DayList = ({ schedule, onTimeRangeChange, isDetail}) => {
   if (!schedule) return null; // state isn't ready yet
 
   const days = schedule.map((day, dayIndex) => {

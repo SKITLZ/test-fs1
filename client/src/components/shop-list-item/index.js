@@ -5,6 +5,7 @@ import './shop-list-item.css';
 import { fullWeekDay, weekDayMap } from '../../helpers/date-helpers';
 import { Link } from 'react-router-dom';
 import DayList from '../day-list';
+import ShopInput from '../general/shop-input';
 
 export default class App extends Component {
   state = {
@@ -144,17 +145,13 @@ export default class App extends Component {
     let nameElem = null;
     if (isDetail) {
       nameElem = (
-        <label className="form-group w-100">
-          Name
-          <input
-            className="form-control"
-            type="text"
-            name="name"
-            placeholder="Shop name"
-            required
-            value={this.state.shop.name}
-            onChange={this.handleInputChange} />
-        </label>
+        <ShopInput
+          label="Name"
+          name="name"
+          placeholder="Enter your shop name"
+          value={this.state.shop.name}
+          inputHandler={this.handleInputChange}
+          required />
       )
     } else {
       nameElem = <b>{ name }</b>
@@ -163,17 +160,12 @@ export default class App extends Component {
     let descriptionElem = null;
     if (isDetail) {
       descriptionElem = (
-        <label className="form-group w-100">
-          Description
-          <input
-            className="form-control"
-            type="text"
-            name="description"
-            placeholder="Describe this shop"
-            required
-            value={this.state.shop.description}
-            onChange={this.handleInputChange} />
-        </label>
+        <ShopInput
+          label="Description"
+          name="description"
+          placeholder="Describe this shop"
+          value={this.state.shop.description}
+          inputHandler={this.handleInputChange} />
       )
     } else {
       descriptionElem = <p>{ description }</p>
@@ -182,17 +174,12 @@ export default class App extends Component {
     let addressElem = null;
     if (isDetail) {
       addressElem = (
-        <label className="form-group w-100">
-          Address
-          <input
-            className="form-control"
-            type="text"
-            name="address"
-            placeholder="Shop address"
-            required
-            value={this.state.shop.address}
-            onChange={this.handleInputChange} />
-        </label>
+        <ShopInput
+          label="Address"
+          name="address"
+          placeholder="Shop address"
+          value={this.state.shop.address}
+          inputHandler={this.handleInputChange} />
       )
     } else {
       addressElem = <p>Address: { address }</p>
@@ -256,7 +243,6 @@ export default class App extends Component {
         <p>Schedule:</p>
         <DayList
           schedule={schedule}
-          isClosed={isClosed}
           onTimeRangeChange={this.onTimeRangeChange}
           isDetail={isDetail}
         />
