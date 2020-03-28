@@ -235,7 +235,8 @@ export default class App extends Component {
         className="btn btn-warning"
         type="button"
         onClick={this.saveShop}
-      >Сохранить изменения</button>
+        disabled={!this.state.shop.name.length}
+      >Save changes</button>
     )
 
     const isClosedElem = (
