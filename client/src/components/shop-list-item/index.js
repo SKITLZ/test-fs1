@@ -98,7 +98,7 @@ export default class App extends Component {
   // For detailed page
   saveShop = () => {
     const newShop = { ...this.state.shop }; // Shallow copy
-    this.props.handlePatch(newShop);
+    this.props.handleSaveBtn(newShop);
   };
 
   handleDelete = () => {

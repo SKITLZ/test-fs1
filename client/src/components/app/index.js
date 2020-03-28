@@ -113,7 +113,7 @@ export default class App extends Component {
             path="/shop/:id"
             render={({ match }) => {
               const shop = this.state.shops.find(el => el._id === match.params.id);
-              return <DetailPage shop={shop} handlePatch={this.handlePatch} />;
+              return <DetailPage shop={shop} handleSaveBtn={this.handlePatch} />;
             }}
           />
           <Route
