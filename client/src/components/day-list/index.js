@@ -5,14 +5,16 @@ import './day-list.css';
 // For detailed page
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 
-const DayList = ({ schedule, onTimeRangeChange, isDetail}) => {
+const DayList = ({ schedule, isClosed, onTimeRangeChange, isDetail}) => {
   if (!schedule) return null; // state isn't ready yet
 
   const days = schedule.map((day, dayIndex) => {
     const workTime = day.workTime;
+    const openTimesElem = <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
+    const closedElem = <span className="text-danger pr-3">Closed</span>
     let timeElem = '';
     if (day.closed) {
-      timeElem = <span className="text-danger pr-3">Closed</span>
+      timeElem = closedElem;
     } else {
       if (isDetail) {
         timeElem = (
@@ -26,13 +28,13 @@ const DayList = ({ schedule, onTimeRangeChange, isDetail}) => {
               disableClock
               required
             />
-            <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
+            { openTimesElem }
           </div>
         );
       } else {
         timeElem = (
           <div>
-            <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
+            { openTimesElem }
           </div>
         )
       }
@@ -53,13 +55,17 @@ const DayList = ({ schedule, onTimeRangeChange, isDetail}) => {
                 disableClock
                 required
               />
-              <span className="text-danger pr-3">{timeOff.time[0]}-{timeOff.time[1]} {timeOff.label};</span>
+              <span className="text-danger pr-3">
+                {timeOff.time[0]}-{timeOff.time[1]} {timeOff.label};
+              </span>
             </div>
           )
         }
         return (
           <div key={timeOffIndex}>
-            <span className="text-danger pr-3">{timeOff.time[0]}-{timeOff.time[1]} {timeOff.label};</span>
+            <span className="text-danger pr-3">
+              {timeOff.time[0]}-{timeOff.time[1]} {timeOff.label};
+            </span>
           </div>
         )
       })

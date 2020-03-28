@@ -47,9 +47,15 @@ export default class App extends Component {
   };
 
   checkIsWorking = () => {
-    const { schedule } = this.state.shop;
+    const { schedule, isClosed } = this.state.shop;
     if (!schedule) return null; // state isn't ready
     const todaySchedule = schedule[this.state.curDayIndex];
+
+    // Store is closed in general
+    if (isClosed) {
+      this.setState({ shopIsWorking: false });
+      return;
+    }
 
     // Is today closed
     if (todaySchedule.closed) {
@@ -118,9 +124,17 @@ export default class App extends Component {
     this.setState({ shop: newShop });
   };
 
+  handleIsClosedCheckbox = (e) => {
+    const value = e.target.checked;
+    const newShop = { ...this.state.shop }; // Shallow copy
+    console.log(value);
+    newShop.isClosed = value;
+    this.setState({ shop: newShop });
+  };
+
   render() {
     const { isDetail, user } = this.props;
-    const { _id, name, description, address, schedule } = this.state.shop;
+    const { _id, name, description, address, schedule, isClosed } = this.state.shop;
 
     let showControls = false;
     if (user && user.id) {
@@ -212,6 +226,18 @@ export default class App extends Component {
       >Сохранить изменения</button>
     )
 
+    const isClosedElem = (
+      <label className="shop-list-item__checkbox-label input-group-text mb-3">
+        Shop is closed
+        <input
+          className="ml-2"
+          type="checkbox"
+          name="isClosed"
+          checked={this.state.shop.isClosed}
+          onChange={this.handleIsClosedCheckbox} />
+      </label>
+    )
+
     return (
       <div className="shop-list-item">
         <p className={isDetail ? 'mb-0' : 'shop-list-item__name'}>
@@ -225,10 +251,12 @@ export default class App extends Component {
             ? <span className="text-success">Shop is working</span>
             : <span className="text-danger">Closed</span>
         }</p>
+        { isDetail ? isClosedElem : null }
         <p>Current time (for debug): { this.state.curTime }</p> {/* Для дебага */}
         <p>Schedule:</p>
         <DayList
           schedule={schedule}
+          isClosed={isClosed}
           onTimeRangeChange={this.onTimeRangeChange}
           isDetail={isDetail}
         />

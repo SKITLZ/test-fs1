@@ -6,8 +6,9 @@ import ShopListItem from '../shop-list-item'
 
 const ShopList = ({ shops, ...otherProps }) => {
   const elements = shops.map((shop) => {
+    const classNames = `shop-list__item list-group-item ${shop.isClosed ? '--closed' : false}`;
     return (
-      <li className="shop-list__item list-group-item" key={shop._id}>
+      <li className={classNames} key={shop._id}>
         <ShopListItem shop={shop} { ...otherProps } />
       </li>
     );
