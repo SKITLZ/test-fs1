@@ -29,8 +29,10 @@ export default class App extends Component {
   };
 
   getStoredAuth = () => {
-    this.setState({ user: JSON.parse(localStorage.getItem('user')) });
-    this.setState({ token: localStorage.getItem('token') });
+    this.setState({
+      user: JSON.parse(localStorage.getItem('user')),
+      token: localStorage.getItem('token'),
+    });
   };
 
   getShops = () => {
@@ -49,8 +51,7 @@ export default class App extends Component {
   };
 
   resetAuth = () => {
-    this.setState({ user: {} });
-    this.setState({ token: '' });
+    this.setState({ user: {}, token: '' });
     localStorage.removeItem('user');
     localStorage.removeItem('token');
   };
