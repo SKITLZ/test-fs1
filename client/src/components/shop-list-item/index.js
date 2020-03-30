@@ -11,7 +11,7 @@ export default class App extends Component {
   state = {
     curDay: fullWeekDay, // date-helpers
     curDayIndex: weekDayMap[fullWeekDay], // date-helpers
-    curTime: this.getCurTime(),
+    curTime: this.getCurTime(), // state.curTime is for debug only
     shopIsWorking: false,
     shop: { ...this.props.shop },
   };
@@ -30,7 +30,7 @@ export default class App extends Component {
 
   updateShop = () => {
     this.setState({ 
-      curTime: this.getCurTime(),
+      curTime: this.getCurTime(), // state.curTime is for debug only
       shopIsWorking: this.checkIsWorking(),
     });
   };
@@ -49,6 +49,15 @@ export default class App extends Component {
     return time;
   };
 
+  getFromToTimes(arr) {
+    // If time[] element == null, change it to '0000'
+    const time = arr.map(el => el || '0000');
+    return {
+      from: time[0].replace(':', ''),
+      to: time[1].replace(':', ''),
+    };
+  };
+
   checkIsWorking = () => {
     const { schedule, isClosed } = this.state.shop;
     if (!schedule) return false; // state isn't ready
@@ -57,22 +66,19 @@ export default class App extends Component {
     // Store is closed in general or today
     if (isClosed || todaySchedule.closed) return false;
 
+    const curTime = this.getCurTime();
+
     // Is during work time
-    const time = todaySchedule.workTime.map(el => el || '0000'); // If time == null, change it to '0000'
-    const from = time[0].replace(':', '');
-    const to = time[1].replace(':', '');
-    if (from > this.state.curTime || to < this.state.curTime) return false;
+    const { from , to } = this.getFromToTimes(todaySchedule.workTime);
+    if (from > curTime || to < curTime) return false;
 
     // Has time offs
     if (!todaySchedule.timeOffs) return true;
 
     // Is during time offs
     for (let i = 0; i < todaySchedule.timeOffs.length; i++) {
-      const time = todaySchedule.timeOffs[i].time.map(el => el || '0000'); // If time == null, change it to '0000'
-      const from = time[0].replace(':', '');
-      const to = time[1].replace(':', '');
-      
-      if ((from <= this.state.curTime) && (to >= this.state.curTime)) return false;
+      const { from , to } = this.getFromToTimes(todaySchedule.timeOffs[i].time);
+      if ((from <= curTime) && (to >= curTime)) return false;
     }
 
     return true;
@@ -258,7 +264,7 @@ export default class App extends Component {
             : <span className="text-danger">Closed</span>
         }</p>
         { isDetail ? isClosedElem : null }
-        <p>Current time (for debug): { this.state.curTime }</p> {/* Для дебага */}
+        <p>Current time (for debug): { this.state.curTime }</p>
         <p>Schedule:</p>
         <DayList
           schedule={schedule}
