@@ -29,8 +29,10 @@ export default class App extends Component {
   };
 
   updateShop = () => {
-    this.setState({ curTime: this.getCurTime() });
-    this.checkIsWorking();
+    this.setState({ 
+      curTime: this.getCurTime(),
+      shopIsWorking: this.checkIsWorking(),
+    });
   };
 
   getCurTime() {
@@ -49,50 +51,31 @@ export default class App extends Component {
 
   checkIsWorking = () => {
     const { schedule, isClosed } = this.state.shop;
-    if (!schedule) return null; // state isn't ready
+    if (!schedule) return false; // state isn't ready
     const todaySchedule = schedule[this.state.curDayIndex];
 
-    // Store is closed in general
-    if (isClosed) {
-      this.setState({ shopIsWorking: false });
-      return;
-    }
-
-    // Is today closed
-    if (todaySchedule.closed) {
-      this.setState({ shopIsWorking: false });
-      return;
-    }
+    // Store is closed in general or today
+    if (isClosed || todaySchedule.closed) return false;
 
     // Is during work time
-    const time = todaySchedule.workTime.map(el => el || '00:00');
+    const time = todaySchedule.workTime.map(el => el || '0000'); // If time == null, change it to '0000'
     const from = time[0].replace(':', '');
     const to = time[1].replace(':', '');
-    if (from > this.state.curTime || to < this.state.curTime) {
-      this.setState({ shopIsWorking: false });
-      return;
-    }
+    if (from > this.state.curTime || to < this.state.curTime) return false;
 
     // Has time offs
-    if (!todaySchedule.timeOffs) {
-      this.setState({ shopIsWorking: true });
-      return;
-    }
+    if (!todaySchedule.timeOffs) return true;
 
     // Is during time offs
     for (let i = 0; i < todaySchedule.timeOffs.length; i++) {
-      // If time == null, change it to '00:00'
-      const time = todaySchedule.timeOffs[i].time.map(el => el || '00:00');
+      const time = todaySchedule.timeOffs[i].time.map(el => el || '0000'); // If time == null, change it to '0000'
       const from = time[0].replace(':', '');
       const to = time[1].replace(':', '');
       
-      if ((from <= this.state.curTime) && (to >= this.state.curTime)) {
-        this.setState({ shopIsWorking: false });
-        return;
-      }
+      if ((from <= this.state.curTime) && (to >= this.state.curTime)) return false;
     }
 
-    this.setState({ shopIsWorking: true });
+    return true;
   };
 
   // For detailed page
