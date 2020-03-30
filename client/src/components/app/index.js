@@ -104,8 +104,7 @@ export default class App extends Component {
       },
     })
       .then((res) => {
-        const newArray = [...this.state.shops];
-        newArray.push(res.data);
+        const newArray = [...this.state.shops, res.data];
         this.setState({ shops: newArray });
         return true;
       })
