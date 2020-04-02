@@ -61,16 +61,13 @@ export default class App extends Component {
   };
 
   handleDelete = (id) => {
-    const index = this.state.shops.findIndex(el => el._id === id);
-    
     axios.delete(`/api/shops/${id}`, {
       headers: {
         authorization: `Bearer ${this.state.token}`,
       },
     })
       .then(() => {
-        const newArray = [...this.state.shops];
-        newArray.splice(index, 1);
+        const newArray = this.state.shops.filter(el => el._id !== id);
         this.setState({ shops: newArray });
       })
       .catch((err) => {
@@ -79,16 +76,13 @@ export default class App extends Component {
   };
 
   handlePatch = (shop) => {
-    const index = this.state.shops.findIndex(el => el._id === shop._id);
-    
     return axios.patch(`/api/shops/${shop._id}`, shop, {
       headers: {
         authorization: `Bearer ${this.state.token}`,
       },
     })
       .then(() => {
-        const newArray = [...this.state.shops];
-        newArray.splice(index, 1, shop);
+        const newArray = this.state.shops.map(el => el._id === shop._id ? shop : el);
         this.setState({ shops: newArray });
         return true;
       })
