@@ -159,14 +159,9 @@ export default class App extends Component {
     const { isEditMode, user } = this.props;
     const { _id, name, description, address, schedule, isClosed } = this.state.shop;
 
-    let showControls = false;
-    if (user && user.id) {
-      showControls = (user.id === this.state.shop.user && !isEditMode);
-    }
-
-    let nameElem = null;
+    let nameEl, descriptionEl, addressEl, isClosedEl, controlsEl, saveShopBtn = null;
     if (isEditMode) {
-      nameElem = (
+      nameEl = (
         <ShopInput
           label="Name"
           name="name"
@@ -175,13 +170,7 @@ export default class App extends Component {
           inputHandler={this.handleInputChange}
           required />
       )
-    } else {
-      nameElem = <b>{ name }</b>
-    }
-    
-    let descriptionElem = null;
-    if (isEditMode) {
-      descriptionElem = (
+      descriptionEl = (
         <ShopInput
           label="Description"
           name="description"
@@ -189,13 +178,7 @@ export default class App extends Component {
           value={this.state.shop.description}
           inputHandler={this.handleInputChange} />
       )
-    } else {
-      descriptionElem = <p>{ description }</p>
-    }
-
-    let addressElem = null;
-    if (isEditMode) {
-      addressElem = (
+      addressEl = (
         <ShopInput
           label="Address"
           name="address"
@@ -203,67 +186,69 @@ export default class App extends Component {
           value={this.state.shop.address}
           inputHandler={this.handleInputChange} />
       )
-    } else {
-      addressElem = <p>Address: { address }</p>
-    }
-
-    const controls = (
-      <span className="float-right">
-        <Link
-          className="shop-list-item__btn btn btn-outline-warning btn-sm"
-          aria-label="Edit shop"
-          to={`/shop/${_id}`}
-        >
-          <i className="fa fa-edit"></i>
-        </Link>
+      isClosedEl = (
+        <label className="shop-list-item__checkbox-label input-group-text mb-3">
+          Shop is closed
+          <input
+            className="ml-2"
+            type="checkbox"
+            name="isClosed"
+            checked={isClosed}
+            onChange={this.handleIsClosedCheckbox} />
+        </label>
+      )
+      saveShopBtn = (
         <button
+          className="btn btn-warning"
           type="button"
-          className="shop-list-item__btn btn btn-outline-danger btn-sm"
-          aria-label="Delete shop"
-          onClick={this.handleDelete}
+          onClick={this.saveShop}
+          disabled={!this.state.shop.name.length}
         >
-          <i className="fa fa-trash-o"></i>
+          { this.props.createNew ? 'Create shop' : 'Save changes' }
         </button>
-      </span>
-    )
-
-    const saveShopBtn = (
-      <button
-        className="btn btn-warning"
-        type="button"
-        onClick={this.saveShop}
-        disabled={!this.state.shop.name.length}
-      >
-        { this.props.createNew ? 'Create shop' : 'Save changes' }
-      </button>
-    )
-
-    const isClosedElem = (
-      <label className="shop-list-item__checkbox-label input-group-text mb-3">
-        Shop is closed
-        <input
-          className="ml-2"
-          type="checkbox"
-          name="isClosed"
-          checked={isClosed}
-          onChange={this.handleIsClosedCheckbox} />
-      </label>
-    )
+      )
+    } else {
+      nameEl = <b>{ name }</b>
+      descriptionEl = <p>{ description }</p>
+      addressEl = <p>Address: { address }</p>
+      
+      if (user && user.id && user.id === this.state.shop.user) {
+        controlsEl = (
+          <span className="float-right">
+            <Link
+              className="shop-list-item__btn btn btn-outline-warning btn-sm"
+              aria-label="Edit shop"
+              to={`/shop/${_id}`}
+            >
+              <i className="fa fa-edit"></i>
+            </Link>
+            <button
+              type="button"
+              className="shop-list-item__btn btn btn-outline-danger btn-sm"
+              aria-label="Delete shop"
+              onClick={this.handleDelete}
+            >
+              <i className="fa fa-trash-o"></i>
+            </button>
+          </span>
+        )
+      }
+    }
 
     return (
       <div className="shop-list-item">
         <p className={isEditMode ? 'mb-0' : 'shop-list-item__name'}>
-          { nameElem }
-          { showControls ? controls : null }
+          { nameEl }
+          { controlsEl }
         </p>
-        { descriptionElem }
-        { addressElem }
+        { descriptionEl }
+        { addressEl }
         <p>{
           this.state.shopIsWorking
             ? <span className="text-success">Shop is working</span>
             : <span className="text-danger">Closed</span>
         }</p>
-        { isEditMode ? isClosedElem : null }
+        { isClosedEl }
         <p>Current time (for debug): { this.state.curTime }</p>
         <p>Schedule:</p>
         <DayList
@@ -275,7 +260,7 @@ export default class App extends Component {
           handleDeleteTimeOff={this.handleDeleteTimeOff}
           handleTimeOffLabelChange={this.handleTimeOffLabelChange}
         />
-        { isEditMode ? saveShopBtn : null }
+        { saveShopBtn }
       </div>
     );
   };
