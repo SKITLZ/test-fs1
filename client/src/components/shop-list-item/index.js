@@ -156,16 +156,16 @@ export default class App extends Component {
   };
 
   render() {
-    const { isDetail, user } = this.props;
+    const { isEditMode, user } = this.props;
     const { _id, name, description, address, schedule, isClosed } = this.state.shop;
 
     let showControls = false;
     if (user && user.id) {
-      showControls = (user.id === this.state.shop.user && !isDetail);
+      showControls = (user.id === this.state.shop.user && !isEditMode);
     }
 
     let nameElem = null;
-    if (isDetail) {
+    if (isEditMode) {
       nameElem = (
         <ShopInput
           label="Name"
@@ -180,7 +180,7 @@ export default class App extends Component {
     }
     
     let descriptionElem = null;
-    if (isDetail) {
+    if (isEditMode) {
       descriptionElem = (
         <ShopInput
           label="Description"
@@ -194,7 +194,7 @@ export default class App extends Component {
     }
 
     let addressElem = null;
-    if (isDetail) {
+    if (isEditMode) {
       addressElem = (
         <ShopInput
           label="Address"
@@ -252,7 +252,7 @@ export default class App extends Component {
 
     return (
       <div className="shop-list-item">
-        <p className={isDetail ? 'mb-0' : 'shop-list-item__name'}>
+        <p className={isEditMode ? 'mb-0' : 'shop-list-item__name'}>
           { nameElem }
           { showControls ? controls : null }
         </p>
@@ -263,19 +263,19 @@ export default class App extends Component {
             ? <span className="text-success">Shop is working</span>
             : <span className="text-danger">Closed</span>
         }</p>
-        { isDetail ? isClosedElem : null }
+        { isEditMode ? isClosedElem : null }
         <p>Current time (for debug): { this.state.curTime }</p>
         <p>Schedule:</p>
         <DayList
           schedule={schedule}
-          isDetail={isDetail}
+          isEditMode={isEditMode}
           onTimeRangeChange={this.onTimeRangeChange}
           handleIsClosedCheckbox={this.handleIsClosedCheckbox}
           handleAddTimeOff={this.handleAddTimeOff}
           handleDeleteTimeOff={this.handleDeleteTimeOff}
           handleTimeOffLabelChange={this.handleTimeOffLabelChange}
         />
-        { isDetail ? saveShopBtn : null }
+        { isEditMode ? saveShopBtn : null }
       </div>
     );
   };

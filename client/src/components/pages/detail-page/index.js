@@ -13,7 +13,7 @@ const DetailPage = ({ shop, handleSaveBtn, createNew }) => {
       render={(props) => {
         return (
           <div className="detail-page">
-            <ShopListItem shop={shop} handleSaveBtn={handleSaveBtn} createNew={createNew} isDetail history={props.history} />
+            <ShopListItem shop={shop} handleSaveBtn={handleSaveBtn} createNew={createNew} isEditMode history={props.history} />
           </div>
         );
       }}

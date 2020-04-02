@@ -8,7 +8,7 @@ import ShopInput from '../general/shop-input';
 
 const DayList = ({
   schedule,
-  isDetail,
+  isEditMode,
   onTimeRangeChange,
   handleIsClosedCheckbox,
   handleAddTimeOff,
@@ -22,11 +22,11 @@ const DayList = ({
     const openTimesElem = <span className="text-success pr-3">Open {workTime[0]}-{workTime[1]};</span>
 
     let closedElem = null;
-    if (isDetail) closedElem = <span className="text-danger w-100 mt-2">Closed</span>;
+    if (isEditMode) closedElem = <span className="text-danger w-100 mt-2">Closed</span>;
     else closedElem = <span className="text-danger pr-3">Closed</span>;
 
     let addTimeOffElem = null;
-    if (isDetail) {
+    if (isEditMode) {
       addTimeOffElem = (
         <button
           className="btn btn-outline-primary btn-sm"
@@ -40,7 +40,7 @@ const DayList = ({
     if (day.closed) {
       timeElem = closedElem;
     } else {
-      if (isDetail) {
+      if (isEditMode) {
         timeElem = (
           <div className="w-100 mt-2">
             <TimeRangePicker
@@ -72,7 +72,7 @@ const DayList = ({
           </span>
         );
 
-        if (isDetail) {
+        if (isEditMode) {
           timeOffElem = (
             <ShopInput
               name="label"
@@ -126,9 +126,9 @@ const DayList = ({
     );
     
     return (
-      <li className={isDetail ? 'mb-5' : 'mb-3'} key={day.day}>
+      <li className={isEditMode ? 'mb-5' : 'mb-3'} key={day.day}>
         <div className="day-list__item">
-          <span className="day-list__name pr-2">{day.day}: { isDetail ? isClosedCheckbox : null}</span>
+          <span className="day-list__name pr-2">{day.day}: { isEditMode ? isClosedCheckbox : null}</span>
           { timeElem }
           { timeOffsElems }
         </div>
