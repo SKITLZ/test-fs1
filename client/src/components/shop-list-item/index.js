@@ -86,7 +86,6 @@ export default class App extends Component {
     return true;
   };
 
-  // For detailed page
   saveShop = async () => {
     const newShop = { ...this.state.shop }; // Shallow copy
     const redirect = await this.props.handleSaveBtn(newShop);
@@ -97,7 +96,6 @@ export default class App extends Component {
     this.props.handleDelete(this.state.shop._id);
   };
 
-  // For detailed page
   onTimeRangeChange = (time, dayIndex, timeOffIndex, main = false) => {
     const newShop = { ...this.state.shop }; // Shallow copy
     if (main) {
@@ -105,7 +103,23 @@ export default class App extends Component {
       this.setState({ shop: newShop });
       return;
     }
-    newShop.schedule[dayIndex].timeOffs[timeOffIndex].time = time;
+
+    const { from: goalFrom, to: goalTo } = this.getFromToTimes(time);
+    const timeOffs = newShop.schedule[dayIndex].timeOffs;
+
+    for (let i = 0; i < timeOffs.length; i++) {
+      if (i === timeOffIndex) continue;
+
+      const { from, to } = this.getFromToTimes(timeOffs[i].time);
+      // Assuming that the first time is always <= than the second time
+      // Need to do a lot of changes to force this behavior and remain user-friendly
+      // Which I'm not interested in at the moment
+      if ((goalFrom >= from && goalFrom <= to) || (goalTo >= from && goalTo <= to)) {
+        console.log('Time offs intertwine');
+        break;
+      }
+    }
+    timeOffs[timeOffIndex].time = time;
     this.setState({ shop: newShop });
   };
 
