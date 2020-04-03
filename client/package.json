@@ -5,6 +5,7 @@
   "dependencies": {
     "@wojtekmaj/react-timerange-picker": "^2.4.0",
     "axios": "^0.19.2",
+    "lodash.clonedeep": "^4.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",

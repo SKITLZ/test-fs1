@@ -7,13 +7,15 @@ import { Link } from 'react-router-dom';
 import DayList from '../day-list';
 import ShopInput from '../general/shop-input';
 
+const cloneDeep = require('lodash.clonedeep');
+
 export default class App extends Component {
   state = {
     curDay: fullWeekDay, // date-helpers
     curDayIndex: weekDayMap[fullWeekDay], // date-helpers
     curTime: this.getCurTime(), // state.curTime is for debug only
     shopIsWorking: false,
-    shop: { ...this.props.shop },
+    shop: cloneDeep(this.props.shop), // Deep shallow copy
   };
 
   componentDidMount = () => {
