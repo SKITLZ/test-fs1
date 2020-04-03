@@ -13,9 +13,9 @@ export class UsersService {
 
   createUser(createUser: UserCreateDto) {
     const { name, email, password } = createUser;
+    if (!password || password.length < 6) throw new NotAcceptableException('Password must be at least 6 characters long');
     return this.userModel.findOne({ email })
       .then((user) => {
-        if (!password || password.length < 6) throw new NotAcceptableException('Password must be at least 6 characters long')
         if (user) throw new ConflictException('User with this email already exists'); // 409 statusCode
 
         const newUser = new this.userModel({
