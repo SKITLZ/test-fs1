@@ -5,13 +5,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const JWT_KEY = require('../../config.js').JWT_KEY;
 
-import { User } from './user.model';
+import { User, UserCreateDto, UserAutheDto } from './user.model';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-  createUser(name: string, email: string, password: string) {
+  createUser(createUser: UserCreateDto) {
+    const { name, email, password } = createUser;
     return this.userModel.findOne({ email })
       .then((user) => {
         if (!password || password.length < 6) throw new NotAcceptableException('Password must be at least 6 characters long')
@@ -56,7 +57,8 @@ export class UsersService {
       });
   }
 
-  authUser(email: string, password: string) {
+  authUser(authUserDto: UserAutheDto) {
+    const { email, password } = authUserDto;
     return this.userModel.findOne({ email })
       .then((user) => {
         if (!password || password.length < 6) throw new NotAcceptableException('Password must be at least 6 characters long')

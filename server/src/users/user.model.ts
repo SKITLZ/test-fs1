@@ -17,4 +17,14 @@ export interface User extends mongoose.Document { // uses @types/mongoose for .D
   email: string;
   password: string;
 }
- 
+
+export interface UserCreateDto {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface UserAutheDto {
+  email: string;
+  password: string;
+}
