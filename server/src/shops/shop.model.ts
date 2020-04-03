@@ -21,3 +21,11 @@ export interface Shop extends mongoose.Document { // uses @types/mongoose for .D
   isClosed: boolean,
   user: string;
 }
+
+export interface ShopCreateDto {
+  name: string;
+  description: string;
+  address: string;
+  schedule: [];
+  isClosed: boolean,
+}

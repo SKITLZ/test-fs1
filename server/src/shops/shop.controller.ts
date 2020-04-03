@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards, Req } fro
 
 import { ShopsService } from './shop.service';
 import { Shop } from './shop.model'
+import { AddShopDto } from './shop.dto';
 import { AuthGuard } from 'src/shared/auth.guard';
 
 @Controller('shops')
@@ -12,13 +13,9 @@ export class ShopsController {
   @UseGuards(new AuthGuard())
   addShop(
     @Req() req: { user: { userId: string } },
-    @Body('name') name: string,
-    @Body('description') description: string,
-    @Body('address') address: string,
-    @Body('isClosed') isClosed: boolean,
-    @Body('schedule') schedule: [],
+    @Body() addShopDto: AddShopDto,
   ): Promise<Shop> {
-    return this.shopsService.addShop(req.user.userId, name, description, address, isClosed, schedule);
+    return this.shopsService.addShop(req.user.userId, addShopDto);
   }
 
   @Get()
@@ -34,13 +31,9 @@ export class ShopsController {
   @Patch(':id')
   updateShop(
     @Param('id') shopId: string,
-    @Body('name') name: string,
-    @Body('description') description: string,
-    @Body('address') address: string,
-    @Body('isClosed') isClosed: boolean,
-    @Body('schedule') schedule: [],
+    @Body() updateShopDto: AddShopDto,
   ): Promise<Shop> {
-    return this.shopsService.updateShop(shopId, name, description, address, isClosed, schedule);
+    return this.shopsService.updateShop(shopId, updateShopDto);
   }
 
   @Delete(':id')

@@ -2,19 +2,15 @@ import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/commo
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { Shop } from './shop.model'
+import { Shop, ShopCreateDto } from './shop.model'
 
 @Injectable()
 export class ShopsService {
   constructor(@InjectModel('Shop') private readonly shopModel: Model<Shop>) {}
 
-  async addShop(user: string, name: string, description: string, address: string, isClosed: boolean, schedule: []) {
+  async addShop(user: string, shop: ShopCreateDto) {
     const newShop = new this.shopModel({
-      name,
-      description,
-      address,
-      isClosed,
-      schedule,
+      ...shop,
       user,
     });
     return await newShop.save(); // because mongoose created model :11 new this.shopModel, it also has 'magic' methods like .save();
@@ -37,7 +33,8 @@ export class ShopsService {
     // return await this.shopModel.findByIdAndRemove(shopId)
   }
 
-  async updateShop(shopId: string, name: string, description: string, address: string, isClosed: boolean, schedule: []) {
+  async updateShop(shopId: string, shop: ShopCreateDto) {
+    const { name, description, address, isClosed, schedule } = shop;
     const updateShop = await this.findShop(shopId);
     if (name) updateShop.name = name;
     if (description) updateShop.description = description;
