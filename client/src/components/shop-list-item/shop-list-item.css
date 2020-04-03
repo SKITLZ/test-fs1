@@ -1,0 +1,25 @@
+.shop-list-item__name::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.shop-list-item__btn {
+  position: relative;
+  width: 35px;
+  margin: 3px;
+  background-color: rgba(255,255,255, 0.6); /* for closed stores */
+  z-index: 1;
+}
+
+.shop-list-item__name b {
+  margin-bottom: .5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.shop-list-item__checkbox-label {
+  display: inline-block;
+  cursor: pointer;
+}
