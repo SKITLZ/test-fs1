@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards, Req, HttpException, HttpStatus } from '@nestjs/common';
 
 import { ShopsService } from './shop.service';
 import { Shop } from './shop.model'
@@ -43,6 +43,6 @@ export class ShopsController {
     @Param('id') shopId: string,
   ): Promise<string> {
     await this.shopsService.deleteShop(req.user.userId, shopId);
-    return `Shop with id: ${shopId} has been successfuly deleted`;
+    throw new HttpException('', HttpStatus.NO_CONTENT);
   }
 }
